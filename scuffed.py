@@ -1,7 +1,8 @@
 from cmath import pi
-from PIL import Image;
+from PIL import Image
 import math
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 
@@ -16,7 +17,7 @@ YChannel = [[0 for x in range(cols)] for y in range(rows)] # Creates a 2D array 
 
 for i in range(rows):   # Iterates through the pixel data and adds the Y channel to the array
     for j in range(cols):
-        YChannel[i][j] = pix[i,j][0]
+        YChannel[i][j] = pix[j,i][0]
 
 
 
@@ -113,6 +114,19 @@ Quantized = [[round(DCTCoefficients[i][j]/Q50[i][j]) for i in range(cols)] for j
 # print(np.matrix(Quantized))
 
 print(np.matrix(YChannel))
+
+plt.style.use('_mpl-gallery-nogrid')
+
+fig, ax = plt.subplots()
+
+ax.imshow(np.matrix(YChannel), cmap='gray')
+
+plt.show()
+
+
+
+
+
 
 
 
