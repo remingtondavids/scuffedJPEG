@@ -19,12 +19,6 @@ for i in range(rows):   # Iterates through the pixel data and adds the Y channel
     for j in range(cols):
         YChannel[i][j] = pix[j,i][0]
 
-
-
-
-
-
-
 # now for the DCT o_o
 
 YChannelShifted = [[0 for x in range(cols)] for y in range(rows)]
@@ -34,7 +28,6 @@ for i in range(rows):
         YChannelShifted[i][j] = YChannel[i][j] - 128
 
 DCTCoefficients = [[0 for x in range(cols)] for y in range(rows)]
-
 
 def getC(x):
     if x == 0:
@@ -46,7 +39,7 @@ DCTSum = 0
 
 CCoverFour = 0 
 
-for i in range(rows):
+for i in range(rows):  # Nested loop implementation of the DCT
     for j in range(cols):
         DCTCoefficients[i][j] = 0
         CCoverFour = (getC(i)*getC(j))/4
@@ -57,7 +50,7 @@ for i in range(rows):
 
 Quantized = [[0 for x in range(cols)] for y in range(rows)]
 
-Q50 = [[16, 11, 10, 16, 24, 40, 51, 61],
+Q50 = [[16, 11, 10, 16, 24, 40, 51, 61], # Quantization matrix for quality 50
        [12, 12, 14, 19, 26, 58, 60, 55],
        [14, 13, 16, 24, 40, 57, 69, 56],
        [14, 17, 22, 29, 51, 87, 80, 62],
@@ -66,64 +59,118 @@ Q50 = [[16, 11, 10, 16, 24, 40, 51, 61],
        [49, 64, 78, 87, 103, 121, 120, 101],
        [72, 92, 95, 98, 112, 100, 103, 99]]
 
+for i in range(rows):
+    for j in range(cols):
+        Quantized[i][j] = round(DCTCoefficients[i][j]/Q50[i][j])
 
 
-
-
-Quantized = [[round(DCTCoefficients[i][j]/Q50[i][j]) for i in range(cols)] for j in range(rows)]
-
-
-
-
-
-
-
-
-# print("Y channel(shifted): \n")
-                
-# for i in range(rows):
-#     for j in range(cols):
-#         print(YChannelShifted[i][j], end = " ")
-
-#     print("\n")
-
-# print("DCT results: \n")
-
-# for i in range(rows):
-#     for j in range(cols):
-#         print(DCTCoefficients[i][j], end = " ")
-
-#     print("\n")
-
-# print("Quantized coefficients: \n")
-
-# for i in range(rows):
-#     for j in range(cols):
-#         print(Quantized[j][i], end = " ")
-
-#     print("\n")
-
+# print('Ychannel: \n')
+# print(np.matrix(YChannel))
+# print('YchannelShifted: \n')
 # print(np.matrix(YChannelShifted))
-
-# print("\n")
-
+# print('DCTCoefficients: \n')
 # print(np.matrix(DCTCoefficients))
-
-# print("\n")
-
+# print('Q50: \n')
+# print(np.matrix(Q50))
+# print('Quantized: \n')
 # print(np.matrix(Quantized))
 
-print(np.matrix(YChannel))
+# plt.style.use('_mpl-gallery-nogrid')
 
-plt.style.use('_mpl-gallery-nogrid')
+# fig, ax = plt.subplots()
 
-fig, ax = plt.subplots()
+# ax.imshow(np.matrix(DCTCoefficients), cmap='gray')
 
-ax.imshow(np.matrix(YChannel), cmap='gray')
+# plt.show()
 
-plt.show()
+def listQuantized(list): # arrange matrix of DCT coefficients into a list
+    output = []
+
+    i = 0
+    j = 0
 
 
+
+    while not ((i == 7) & (j == 7)):
+
+        
+        if ((i == 0) | (j == 0) | (i == 7) | (j == 7)): # when on an edge
+
+            if (i == 0): # top edge
+                if (j % 2 == 0):
+                    output.append(list[i][j])
+                    j += 1
+                else:
+                    output.append(list[i][j])
+                    i += 1
+                    j -= 1
+
+            if (i == 7): # bottom edge              
+                if (j % 2 == 0):
+                    output.append(list[i][j])
+                    j += 1
+                else:
+                    output.append(list[i][j])
+                    i -= 1
+                    j += 1
+
+            if (j == 0): # left edge
+                if (i % 2 == 0):
+                    output.append(list[i][j])
+                    i -= 1
+                    j += 1
+                else:
+                    output.append(list[i][j])
+                    i += 1
+            
+            if (j == 7): # right edge
+                if ((i == 7) & (j == 7)):
+                    output.append(list[i][j])
+                    return output
+
+                elif (i % 2 == 0):
+                    output.append(list[i][j])
+                    i += 1
+                    j -= 1
+                else:
+                    output.append(list[i][j])
+                    i += 1
+        
+        else: # when not on an edge
+
+            if(((i % 2 == 0) & (j % 2 == 0)) | ((i % 2 != 0) & (j % 2 != 0))):
+                output.append(list[i][j])
+                i -= 1
+                j += 1
+            
+            else:
+                output.append(list[i][j])
+                i += 1
+                j -= 1
+
+    
+
+
+outputArr = listQuantized(Quantized);
+
+print(outputArr)
+
+
+
+# expected arr : [-8, -11, 1, -3, -1, -1, -6, -3, -4, -1, -2, -2, -4, -1, -2, -1, 0, -2, -1, -2, -1, -1, -1, -1, -1, ]
+
+
+
+            
+
+
+        
+
+
+        
+
+
+    
 
 
 
