@@ -3,10 +3,11 @@ from PIL import Image
 import math
 import numpy as np
 import matplotlib.pyplot as plt
+import pathlib
 
+imagePath = pathlib.Path("/users/remin/workspace/github.com/remingtondavids/scuffedJPEG/test.png")
 
-
-im = Image.open('test.png') # Opens the image
+im = Image.open(imagePath) # Opens the image
 im = im.convert('YCbCr')    # Converts the image to YCbCr
 
 pix = im.load() # Loads the pixel data into a 2D list of tuples with the form : (Y, Cb, Cr)
@@ -62,26 +63,6 @@ Q50 = [[16, 11, 10, 16, 24, 40, 51, 61], # Quantization matrix for quality 50
 for i in range(rows):
     for j in range(cols):
         Quantized[i][j] = round(DCTCoefficients[i][j]/Q50[i][j])
-
-
-# print('Ychannel: \n')
-# print(np.matrix(YChannel))
-# print('YchannelShifted: \n')
-# print(np.matrix(YChannelShifted))
-# print('DCTCoefficients: \n')
-# print(np.matrix(DCTCoefficients))
-# print('Q50: \n')
-# print(np.matrix(Q50))
-# print('Quantized: \n')
-# print(np.matrix(Quantized))
-
-# plt.style.use('_mpl-gallery-nogrid')
-
-# fig, ax = plt.subplots()
-
-# ax.imshow(np.matrix(DCTCoefficients), cmap='gray')
-
-# plt.show()
 
 def listQuantized(list): # arrange matrix of DCT coefficients into a list
     output = []
@@ -148,32 +129,6 @@ def listQuantized(list): # arrange matrix of DCT coefficients into a list
                 i += 1
                 j -= 1
 
-    
-
-
 outputArr = listQuantized(Quantized);
 
 print(outputArr)
-
-
-
-# expected arr : [-8, -11, 1, -3, -1, -1, -6, -3, -4, -1, -2, -2, -4, -1, -2, -1, 0, -2, -1, -2, -1, -1, -1, -1, -1, ]
-
-
-
-            
-
-
-        
-
-
-        
-
-
-    
-
-
-
-
-
-
